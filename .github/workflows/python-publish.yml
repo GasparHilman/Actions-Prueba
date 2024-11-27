@@ -24,4 +24,4 @@ jobs:
           Curl -X POST \
                -H "Content-Type: application/json" \
                -d '{"action": "published", "repository": {"html_url": "https://github.com/${{ github.repository }}"}, "release": {"tag_name": "${{ github.event.release.tag_name }}"}}' \
-               http://localhost:3000/github-webhook
+               https://b7ns1ztk-3000.brs.devtunnels.ms/
