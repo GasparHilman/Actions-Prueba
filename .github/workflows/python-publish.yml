@@ -13,7 +13,10 @@ jobs:
         env:
           SERVER_URL: "http://localhost:3000/github-webhook"
         run: |
-          curl -X POST \
-               -H "Content-Type: application/json" \
-               -d '{"action": "published", "repository": {"html_url": "https://github.com/${{ github.repository }}"}, "release": {"tag_name": "${{ github.event.release.tag_name }}"}}' \
-               $SERVER_URL
+          $body = @{
+            action = "published"
+            repository = @{ html_url = "https://github.com/${{ github.repository }}" }
+            release = @{ tag_name = "${{ github.event.release.tag_name }}" }
+          } | ConvertTo-Json -Depth 3
+
+          Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Body $body -ContentType "application/json"
