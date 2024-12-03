@@ -9,17 +9,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Activar webhook
-        env:
-          SERVER_URL: "http://localhost:3000/github-webhook"
-        run: |
-          $body = @{
-            action = "published"
-            repository = @{ html_url = "https://github.com/${{ github.repository }}" }
-            release = @{ tag_name = "${{ github.event.release.tag_name }}" }
-          } | ConvertTo-Json -Depth 3
-
-          Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Body $body -ContentType "application/json"
       - name: Descargar release
         env:
           SERVER_URL: "http://localhost:3000/release-to-express"
