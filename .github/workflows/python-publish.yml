@@ -20,3 +20,30 @@ jobs:
           } | ConvertTo-Json -Depth 3
 
           Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Body $body -ContentType "application/json"
+      - name: Descargar release
+        env:
+          SERVER_URL: "http://localhost:3000/release-to-express"
+        run: |
+          # Obtener el ID del release
+          $release_id = ${{ github.event.release.id }}
+          $assets_url = "https://api.github.com/repos/${{ github.repository }}/releases/$release_id/assets"
+
+          # Configurar encabezados para la autenticación
+          $headers = @{
+              Authorization = "Bearer $env:GITHUB_TOKEN"
+              Accept        = "application/vnd.github.v3+json"
+          }
+
+          # Obtener la lista de Assets
+          Write-Host "Obteniendo los Assets del release desde: $assets_url"
+          $assets = Invoke-RestMethod -Uri $assets_url -Headers $headers -Method Get
+
+          # Filtrar los archivos .hex
+          $hexFiles = $assets | Where-Object { $_.name -like "*.text" }
+          if (-not $hexFiles) {
+              Write-Host "No se encontraron archivos .hex. Finalizando."
+              exit 0
+          }
+          foreach ($file in $hexFiles) {
+              Write-Host "Procesando archivo: $($file.name)"
+          }
