@@ -36,4 +36,5 @@ jobs:
           }
           foreach ($file in $hexFiles) {
               Write-Host "Procesando archivo: $($file.name)"
+              $download_url = $file.browser_download_url
           }
