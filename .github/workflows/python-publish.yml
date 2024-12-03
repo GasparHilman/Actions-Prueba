@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Descargar release
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SERVER_URL: "http://localhost:3000/release-to-express"
         run: |
           # Obtener el ID del release
@@ -19,8 +20,8 @@ jobs:
 
           # Configurar encabezados para la autenticación
           $headers = @{
-              Authorization = "Bearer"
-              Accept        = "application/vnd.github.v3+json"
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            Accept        = "application/vnd.github.v3+json"
           }
 
           # Obtener la lista de Assets
