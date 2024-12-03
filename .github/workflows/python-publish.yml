@@ -30,7 +30,7 @@ jobs:
 
           # Configurar encabezados para la autenticación
           $headers = @{
-              Authorization = "Bearer $env:GITHUB_TOKEN"
+              Authorization = "Bearer"
               Accept        = "application/vnd.github.v3+json"
           }
 
