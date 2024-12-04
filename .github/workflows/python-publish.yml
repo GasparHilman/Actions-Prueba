@@ -16,7 +16,6 @@ jobs:
         run: |
           # Obtener el ID del release
           $release_id = ${{ github.event.release.id }}
-          $release_nombre = ${{ github.event.release.name }}
           $assets_url = "https://api.github.com/repos/${{ github.repository }}/releases/$release_id/assets"
 
           $headers = @{
@@ -37,7 +36,7 @@ jobs:
           $downloadUrls = $hexFiles | ForEach-Object { $_.browser_download_url }
           Write-Host $downloadUrls
           $body = @{
-              nombre = $release_nombre
+              nombre = ${{ github.event.release.name }}
               urls = $downloadUrls
           }
           Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Body ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
