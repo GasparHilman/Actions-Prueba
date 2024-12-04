@@ -33,12 +33,9 @@ jobs:
               Write-Host "No se encontraron archivos .hex. Finalizando."
               exit 0
           }
-          foreach ($file in $hexFiles) {
-              Write-Host "Procesando archivo: $($file.name)"
-              $download_url = $file.browser_download_url
-          }
-          Write-Host $download_url
+          $downloadUrls = $hexFiles | ForEach-Object { $_.browser_download_url }
+          Write-Host $downloadUrls
           $body = @{
-              urls = $download_url
+              urls = $downloadUrls
           }
           Invoke-RestMethod -Uri $env:SERVER_URL -Method Post ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
