@@ -39,6 +39,6 @@ jobs:
           $body = @{
               nombre = "${{ github.event.release.name }}"
               urls = $downloadUrls
-              repositorio = @{"https://github.com/${{ github.repository }}"}
+              repositorio = $"https://github.com/${{ github.repository }}"
           }
           Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Body ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
