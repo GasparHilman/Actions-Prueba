@@ -37,7 +37,8 @@ jobs:
               Write-Host "Procesando archivo: $($file.name)"
               $download_url = $file.browser_download_url
           }
+          Write-Host $download_url
           $body = @{
-              urls = $downloadUrls
+              urls = $download_url
           }
           Invoke-RestMethod -Uri $env:SERVER_URL -Method Post ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
