@@ -12,7 +12,7 @@ jobs:
       - name: Descargar release
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          SERVER_URL: "http://localhost:3000/release-to-express"
+          SERVER_URL: "http://localhost:3000/descargar_assets"
         run: |
           # Obtener el ID del release
           $release_id = ${{ github.event.release.id }}
