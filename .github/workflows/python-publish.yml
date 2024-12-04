@@ -36,7 +36,7 @@ jobs:
           $downloadUrls = $hexFiles | ForEach-Object { $_.browser_download_url }
           Write-Host $downloadUrls
           $body = @{
-              nombre = ${{ github.event.release.name }}
+              nombre = "${{ github.event.release.name }}"
               urls = $downloadUrls
           }
           Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Body ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
