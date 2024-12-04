@@ -38,4 +38,4 @@ jobs:
           $body = @{
               urls = $downloadUrls
           }
-          Invoke-RestMethod -Uri $env:SERVER_URL -Method Post ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
+          Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Body ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
