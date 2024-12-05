@@ -29,7 +29,7 @@ jobs:
           $assets = Invoke-RestMethod -Uri $assets_url -Headers $headers -Method Get
 
           # Filtrar los archivos .txt
-          $hexFiles = $assets | Where-Object { $_.name -like "*.txt" }
+          $hexFiles = $assets | Where-Object { $_.name -like "*.hex" }
           if (-not $hexFiles) {
               Write-Host "No se encontraron archivos .hex. Finalizando."
               exit 0
