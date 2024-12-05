@@ -31,13 +31,12 @@ jobs:
               Write-Host "No se encontraron archivos .hex. Finalizando."
               exit 0
           }
-          $texto = ${{ github.event.release.body }}
           $downloadUrls = $hexFiles | ForEach-Object { $_.browser_download_url }
           Write-Host $downloadUrls
           $body = @{
               nombre = "${{ github.event.release.name }}"
               urls = $downloadUrls
-              text = $texto
+              text = "${{ github.event.release.body }}"
               repositorio = "https://github.com/${{ github.repository }}"
           }
           Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Body ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
