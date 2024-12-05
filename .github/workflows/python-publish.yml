@@ -14,7 +14,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           SERVER_URL: "http://ghilman.development:8000/api/method/gaspar.api.procesar_urls"
         run: |
-          # Obtener el ID del release
           $release_id = ${{ github.event.release.id }}
           $assets_url = "https://api.github.com/repos/${{ github.repository }}/releases/$release_id/assets"
           
@@ -24,47 +23,21 @@ jobs:
             Accept        = "application/vnd.github.v3+json"
           }
 
-          # Obtener la lista de Assets
           Write-Host "Obteniendo los Assets del release desde: $assets_url"
           $assets = Invoke-RestMethod -Uri $assets_url -Headers $headers -Method Get
-
-          # Filtrar los archivos .txt
+                    
           $hexFiles = $assets | Where-Object { $_.name -like "*.hex" }
           if (-not $hexFiles) {
               Write-Host "No se encontraron archivos .hex. Finalizando."
               exit 0
           }
+          $texto = ${{ github.event.release.body }}
           $downloadUrls = $hexFiles | ForEach-Object { $_.browser_download_url }
           Write-Host $downloadUrls
           $body = @{
               nombre = "${{ github.event.release.name }}"
               urls = $downloadUrls
+              text = $texto
               repositorio = "https://github.com/${{ github.repository }}"
           }
           Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Body ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
-      - name: Enviar README a Frappe
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          README_SERVER_URL: "http://ghilman.development:8000/api/method/gaspar.api.procesar_readme"
-        run: |
-          $readme_url = "https://api.github.com/repos/${{ github.repository }}/readme"
-          $headers = @{
-            Authorization = "Bearer $env:GITHUB_TOKEN"
-            Accept        = "application/vnd.github.v3+json"
-          }
-
-          Write-Host "Obteniendo el README.md desde: $readme_url"
-          $readme_response = Invoke-RestMethod -Uri $readme_url -Headers $headers -Method Get
-
-          if ($readme_response.content) {
-              Write-Host "Contenido del README.md obtenido y enviado sin decodificar."
-          } else {
-              Write-Host "README.md no disponible en el repositorio."
-              $readme_response.content = ""
-          }
-          
-          $body = @{
-              repositorio = "https://github.com/${{ github.repository }}"
-              readme = $readme_response.content
-          }
-          Invoke-RestMethod -Uri $env:README_SERVER_URL -Method Post -Body ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
