@@ -12,7 +12,7 @@ jobs:
       - name: Descargar release
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          SERVER_URL: "http://localhost:3000/descargar_assets"
+          SERVER_URL: "http://ghilman.development:8000/api/method/gaspar.api.procesar_urls"
         run: |
           # Obtener el ID del release
           $release_id = ${{ github.event.release.id }}
