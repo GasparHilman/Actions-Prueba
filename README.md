@@ -1,3 +1,7 @@
+Este proyecto implementa un workflow para la automatización en la realización de proyectos, el cual interactua con una aplicación de Frappe y un NAS mediante la API de QNAP.
+
+
+
 
 # CREAR ACTION
   * Si en la barra de arriba del repositorio no aparece una pestaña que dice Actions, hay que ir a la pestaña Settings/configuración -> Actions, y activar los Actions.
