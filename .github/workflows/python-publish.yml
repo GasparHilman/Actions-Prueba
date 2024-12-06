@@ -14,7 +14,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           SERVER_URL: "http://ghilman.development:8000/api/method/gaspar.api.procesar_urls"
         run: |
-          $assets = ${{ toJson(github.event.release.assets) }}
+          $assets = '${{ toJson(github.event.release.assets) }}'
           Write-Host $assets
           $hexFiles = $assets | ConvertFrom-Json | Where-Object { $_.name -like "*.hex" }
           if (-not $hexFiles) {
