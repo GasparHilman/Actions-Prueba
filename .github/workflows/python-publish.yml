@@ -14,19 +14,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           SERVER_URL: "http://ghilman.development:8000/api/method/gaspar.api.procesar_urls"
         run: |
-          $release_id = ${{ github.event.release.id }}
-          $assets_url = "https://api.github.com/repos/${{ github.repository }}/releases/$release_id/assets"
-          
-
-          $headers = @{
-            Authorization = "Bearer $env:GITHUB_TOKEN"
-            Accept        = "application/vnd.github.v3+json"
-          }
-
-          Write-Host "Obteniendo los Assets del release desde: $assets_url"
-          $assets = Invoke-RestMethod -Uri $assets_url -Headers $headers -Method Get
-                    
-          $hexFiles = $assets | Where-Object { $_.name -like "*.hex" }
+          $assets = ${{ toJson(github.event.release.assets) }}
+          Write-Host $assets
+          $hexFiles = $assets | ConvertFrom-Json | Where-Object { $_.name -like "*.hex" }
           if (-not $hexFiles) {
               Write-Host "No se encontraron archivos .hex. Finalizando."
               exit 0
