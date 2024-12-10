@@ -11,8 +11,8 @@ jobs:
     steps:
       - name: Descargar release
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          SERVER_URL: "http://ghilman.development:8000/api/method/gaspar.api.procesar_urls"
+          FRAPPE_TOKEN: ${{ secrets.TOKEN }}
+          SERVER_URL: ${{ secrets.URL }}
         run: |
           $assets = '${{ toJson(github.event.release.assets) }}'
           Write-Host $assets
@@ -23,10 +23,13 @@ jobs:
           }
           $downloadUrls = $hexFiles | ForEach-Object { $_.browser_download_url }
           Write-Host $downloadUrls
+          $headers = @{
+            Authorization = "token $env:FRAPPE_TOKEN"
+          }
           $body = @{
               nombre = "${{ github.event.release.name }}"
               urls = $downloadUrls
               text = "${{ github.event.release.body }}"
               repositorio = "https://github.com/${{ github.repository }}"
           }
-          Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Body ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
+          Invoke-RestMethod -Uri $env:SERVER_URL -Method Post -Headers $headers -Body ($body | ConvertTo-Json -Depth 10) -ContentType "application/json"
